@@ -35,6 +35,25 @@ window.addEventListener('load', function (){
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.player = new Player(this);
+
+            this.mouse = {
+                x: this.width * 0.5,
+                y: this.height * 0.5,
+                pressed: false
+            }
+
+            // event listeners
+            canvas.addEventListener('mousedown', (evt) => {
+                this.mouse.x = evt.offsetX;
+                this.mouse.y = evt.offsetY
+                this.mouse.pressed = true;
+            });
+
+            canvas.addEventListener('mouseup', (evt) => {
+                this.mouse.x = evt.offsetX;
+                this.mouse.y = evt.offsetY;
+                this.mouse.pressed = false;
+            });
         }
 
         render(context) {
