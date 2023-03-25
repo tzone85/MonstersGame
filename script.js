@@ -8,7 +8,7 @@ window.addEventListener('load', function (){
     // place here to avoid updating state with every draw
     ctx.fillStyle = 'white';
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'while';
+    ctx.strokeStyle = 'white';
 
     class Player {
         constructor(game) {
@@ -19,6 +19,9 @@ window.addEventListener('load', function (){
 
             this.speedX = 0;
             this.speedY = 0;
+
+            this.dx = 0;
+            this.dy = 0;
         }
 
         draw(context) {
@@ -37,8 +40,12 @@ window.addEventListener('load', function (){
         }
 
         update() {
-            this.speedX = (this.game.mouse.x - this.collisionX) / 20;
-            this.speedY = (this.game.mouse.y - this.collisionY) / 20;
+            this.dx = this.game.mouse.x - this.collisionX;
+            this.dy = this.game.mouse.y - this.collisionY;
+
+            this.speedX = this.dx / 20;
+            this.speedY = this.dy / 20;
+
             this.collisionX += this.speedX;
             this.collisionY += this.speedY;
         }
@@ -69,11 +76,20 @@ window.addEventListener('load', function (){
                 this.mouse.y = evt.offsetY;
                 this.mouse.pressed = false;
             });
+
+
+            canvas.addEventListener('mousemove', (evt) => {
+                this.mouse.x = evt.offsetX;
+                this.mouse.y = evt.offsetY;
+            });
         }
 
         render(context) {
-            this.player.draw(context);
-            this.player.update();
+            if (this.mouse.pressed) {
+                this.player.draw(context);
+                this.player.update();
+            }
+
         }
     }
 
