@@ -22,6 +22,7 @@ window.addEventListener('load', function (){
 
             this.dx = 0;
             this.dy = 0;
+            this.speedModifier = 5;
         }
 
         draw(context) {
@@ -43,11 +44,19 @@ window.addEventListener('load', function (){
             this.dx = this.game.mouse.x - this.collisionX;
             this.dy = this.game.mouse.y - this.collisionY;
 
-            this.speedX = this.dx / 20;
-            this.speedY = this.dy / 20;
+            const distance = Math.hypot(this.dy, this.dx);
 
-            this.collisionX += this.speedX;
-            this.collisionY += this.speedY;
+            // move only when dist > speedModifier
+            if (distance > this.speedModifier) {
+                this.speedX = this.dx / distance || 0;
+                this.speedY = this.dy / distance || 0;
+            } else {
+                this.speedX = 0;
+                this.speedY = 0;
+            }
+
+            this.collisionX += this.speedX * this.speedModifier;
+            this.collisionY += this.speedY * this.speedModifier;
         }
     }
 
