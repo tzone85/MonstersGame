@@ -124,8 +124,31 @@ window.addEventListener('load', function () {
         }
             init()
             {
-                for (let i = 0; i < this.numberOfObstacles; i++) {
-                    this.obstacle.push(new Obstacle(this));
+                 // circle packing
+                let aattempts = 0;
+
+                while (this.obstacle.length < this.numberOfObstacles && aattempts < 500) {
+
+                    let testObstacle = new Obstacle(this);
+                    // console.log(testObstacle);
+
+                    let overlap = false;
+
+                    this.obstacle.forEach(obstacle => {
+                        const dx = testObstacle.collisionX - obstacle.collisionX;
+                        const dy = testObstacle.collisionY - obstacle.collisionY;
+
+                        const distance = Math.hypot(dy, dx);
+                        const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius;
+
+                        if (distance < sumOfRadii) {
+                             overlap = true;
+                        }
+                    });
+                    if (!overlap) {
+                        this.obstacle.push(testObstacle);
+                    }
+                    aattempts++;
                 }
             }
 
