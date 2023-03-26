@@ -1,4 +1,4 @@
-window.addEventListener('load', function (){
+window.addEventListener('load', function () {
     const canvas = document.getElementById('canvas1');
 
     const ctx = canvas.getContext('2d');
@@ -60,12 +60,35 @@ window.addEventListener('load', function (){
         }
     }
 
+    class Obstacle {
+        constructor(game) {
+            this.game = game;
+
+            this.collisionX = Math.random() * this.game.width;
+            this.collisionY = Math.random() * this.game.height;
+            this.collisionRadius = 75;
+
+        }
+
+        draw(context) {
+            context.beginPath();
+            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+            context.save();
+            context.globalAlpha = 0.5;
+            context.fill();
+            context.restore();
+            context.stroke();
+        }
+    }
+
     class Game {
         constructor(canvas) {
             this.canvas = canvas;
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.player = new Player(this);
+            this.numberOfObstacles = 5;
+            this.obstacle = [];
 
             this.mouse = {
                 x: this.width * 0.5,
@@ -86,23 +109,33 @@ window.addEventListener('load', function (){
                 this.mouse.pressed = false;
             });
 
-
             canvas.addEventListener('mousemove', (evt) => {
-                this.mouse.x = evt.offsetX;
-                this.mouse.y = evt.offsetY;
+                if (this.mouse.pressed) {
+                    this.mouse.x = evt.offsetX;
+                    this.mouse.y = evt.offsetY;
+                }
             });
         }
 
         render(context) {
-            if (this.mouse.pressed) {
                 this.player.draw(context);
                 this.player.update();
+                this.obstacle.forEach(obstacle => obstacle.draw(context));
+        }
+            init()
+            {
+                for (let i = 0; i < this.numberOfObstacles; i++) {
+                    this.obstacle.push(new Obstacle(this));
+                }
             }
 
         }
-    }
+
+
 
     const game = new Game(canvas);
+    game.init();
+    console.log(game);
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -110,6 +143,7 @@ window.addEventListener('load', function (){
         requestAnimationFrame(animate);
 
     }
+
     animate();
 });
 
