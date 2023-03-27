@@ -66,7 +66,7 @@ window.addEventListener('load', function () {
 
             this.collisionX = Math.random() * this.game.width;
             this.collisionY = Math.random() * this.game.height;
-            this.collisionRadius = 75;
+            this.collisionRadius = 55;
 
             // obstacled to be randomly scattered
             this.image = document.getElementById('obstacles');
@@ -77,25 +77,22 @@ window.addEventListener('load', function () {
             this.height = this.spriteHeight;
 
             this.spriteX = this.collisionX - this.width * 0.5;
-            this.spriteY = this.collisionY - this.height * 0.5;
+            this.spriteY = this.collisionY - this.height * 0.5 - 70;
 
 
         }
 
         draw(context) {
 
-            // context.drawImage(this.image, sourceX, sourceY, sourceWidth, sourceHeight, this.collisionX, this.collisionY, this.width, this.height);
-            // window.onload = function () {
-                context.drawImage(document.getElementById('obstacles'), 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
-                context.beginPath();
-                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-                context.save();
-                context.globalAlpha = 0.5;
-                context.fill();
-                context.restore();
-                context.stroke();
+            context.drawImage(document.getElementById('obstacles'), 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
+            context.beginPath();
+            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+            context.save();
+            context.globalAlpha = 0.5;
+            context.fill();
+            context.restore();
+            context.stroke();
 
-            // }
         }
     }
 
