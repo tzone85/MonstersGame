@@ -5,7 +5,6 @@
      - I've deployed to GithubPages instead of CodePen. This is also due to time constraints
 
     ### Known Defects
-     - No test suit liek Jest installed and applied
-     - player is a circle for now, running out of time
+     - No test suit like Jest installed and applied
 
     Node version used: v18.12.1
