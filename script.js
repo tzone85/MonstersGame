@@ -68,16 +68,34 @@ window.addEventListener('load', function () {
             this.collisionY = Math.random() * this.game.height;
             this.collisionRadius = 75;
 
+            // obstacled to be randomly scattered
+            this.image = document.getElementById('obstacles');
+            this.spriteWidth = 250;
+            this.spriteHeight = 250;
+
+            this.width = this.spriteWidth;
+            this.height = this.spriteHeight;
+
+            this.spriteX = this.collisionX - this.width * 0.5;
+            this.spriteY = this.collisionY - this.height * 0.5;
+
+
         }
 
         draw(context) {
-            context.beginPath();
-            context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-            context.save();
-            context.globalAlpha = 0.5;
-            context.fill();
-            context.restore();
-            context.stroke();
+
+            // context.drawImage(this.image, sourceX, sourceY, sourceWidth, sourceHeight, this.collisionX, this.collisionY, this.width, this.height);
+            // window.onload = function () {
+                context.drawImage(document.getElementById('obstacles'), 0, 0, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
+                context.beginPath();
+                context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+                context.save();
+                context.globalAlpha = 0.5;
+                context.fill();
+                context.restore();
+                context.stroke();
+
+            // }
         }
     }
 
@@ -87,7 +105,8 @@ window.addEventListener('load', function () {
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.player = new Player(this);
-            this.numberOfObstacles = 5;
+
+            this.numberOfObstacles = 1;
             this.obstacle = [];
 
             this.mouse = {
