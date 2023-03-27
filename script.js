@@ -57,6 +57,14 @@ window.addEventListener('load', function () {
 
             this.collisionX += this.speedX * this.speedModifier;
             this.collisionY += this.speedY * this.speedModifier;
+
+            // does collision occur
+            // only able to check objects with collision x and y defined within the constructor
+            this.game.obstacle.forEach(obstacle => {
+                if (this.game.checkCollision(this, obstacle)) {
+                    console.log('Collision');
+                }
+            })
         }
     }
 
@@ -143,6 +151,18 @@ window.addEventListener('load', function () {
                 this.player.draw(context);
                 this.player.update();
                 this.obstacle.forEach(obstacle => obstacle.draw(context));
+        }
+
+        checkCollision(a, b) {
+            const dx = a.collisionX - b.collisionX;
+            const dy = a.collisionY - b.collisionY;
+
+            const distance = Math.hypot(dy, dx);
+
+            // determine if collision took place using the two radii of the circles
+            const sumRadii = a.collisionRadius + b.collisionRadius;
+
+             return (distance < sumRadii);
         }
             init()
             {
