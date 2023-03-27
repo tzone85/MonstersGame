@@ -60,10 +60,19 @@ window.addEventListener('load', function () {
 
             // does collision occur
             // only able to check objects with collision x and y defined within the constructor
+            // [(distance < sumRadii), distance, sumRadii, dx, dy];
             this.game.obstacle.forEach(obstacle => {
-                if (this.game.checkCollision(this, obstacle)) {
-                    console.log('Collision');
+                let [collision, distance, sumRadii, dx, dy] = this.game.checkCollision(this, obstacle);
+
+                if (collision) {
+                    // horizontal and vertical vectors defined
+                    const unit_x = dx / distance;
+                    const unit_y = dy / distance;
+
+                    this.collisionX = obstacle.collisionX + (sumRadii + 1 ) * unit_x;
+                    this.collisionY = obstacle.collisionY + (sumRadii + 1) * unit_y;
                 }
+
             })
         }
     }
@@ -148,9 +157,9 @@ window.addEventListener('load', function () {
         }
 
         render(context) {
+                this.obstacle.forEach(obstacle => obstacle.draw(context));
                 this.player.draw(context);
                 this.player.update();
-                this.obstacle.forEach(obstacle => obstacle.draw(context));
         }
 
         checkCollision(a, b) {
@@ -162,7 +171,8 @@ window.addEventListener('load', function () {
             // determine if collision took place using the two radii of the circles
             const sumRadii = a.collisionRadius + b.collisionRadius;
 
-             return (distance < sumRadii);
+            // return if collision is happening with custom values that we added
+             return [(distance < sumRadii), distance, sumRadii, dx, dy];
         }
             init()
             {
