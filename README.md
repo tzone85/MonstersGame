@@ -7,4 +7,8 @@
     ### Known Defects
      - No test suit like Jest installed and applied
 
+    ### Use your mouse to play the game 
+
+    ## How to play
+    Point mouse in any directionon the game board. Click and drag around or point and click
     Node version used: v18.12.1
