@@ -1,0 +1,50 @@
+@startuml component
+title MonstersGame — Component Architecture
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor Player as user
+
+package "src/" {
+  [main.js\n(entry + DOM wiring)] as main
+  [Game\n(world state)] as game
+  [Player\n(class)] as playerc
+  [Obstacle\n(class)] as obstacle
+  package "collision (pure)" as col {
+    [checkCircleCollision]
+    [angleToFrameY]
+    [velocityToward]
+    [resolveCollision]
+    [overlapsAny]
+    [withinPlayfield]
+  }
+}
+
+cloud "Canvas 2D" as canvas
+folder "public/\n(sprites)" as public
+
+user --> main : mouse events
+main --> canvas : ctx = getContext('2d')
+main --> game : new Game(...)
+game --> playerc : owns
+game --> obstacle : 0..n
+playerc --> col : uses
+obstacle --> col : uses
+game --> col : init() uses overlapsAny + withinPlayfield
+playerc --> canvas : drawImage
+obstacle --> canvas : drawImage
+main --> public : loadImage
+
+note bottom of col
+  Pure functions only.
+  No DOM, no canvas.
+  Vitest-covered with 26 tests.
+end note
+
+note right of game
+  Owns mouse state.
+  step() and render() exposed
+  for unit + e2e testing.
+end note
+@enduml
