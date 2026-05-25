@@ -1,0 +1,7 @@
+body { margin: 0; background: #111; color: white; font-family: system-ui, sans-serif; }
+canvas#canvas1 {
+  display: block;
+  margin: 0 auto;
+  background: url("/background.png") center/cover no-repeat;
+  border: 1px solid #444;
+}
