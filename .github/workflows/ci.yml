@@ -15,8 +15,12 @@ permissions:
 
 jobs:
   lint:
-    name: Lint
-    runs-on: ubuntu-latest
+    name: Lint (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,15 +29,19 @@ jobs:
       - run: npm run lint
 
   unit:
-    name: Unit tests + coverage
-    runs-on: ubuntu-latest
+    name: Unit tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: "20", cache: npm }
       - run: npm ci
       - run: npm test
-      - if: always()
+      - if: always() && matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with: { name: coverage, path: coverage/, retention-days: 14 }
 
@@ -53,15 +61,20 @@ jobs:
         with: { name: playwright-report, path: playwright-report/, retention-days: 14 }
 
   build:
-    name: Vite build
-    runs-on: ubuntu-latest
+    name: Vite build (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: "20", cache: npm }
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v4
+      - if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
         with: { name: dist, path: dist/, retention-days: 14 }
 
   deploy:

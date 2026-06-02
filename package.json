@@ -14,7 +14,8 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "diagrams": "node scripts/render_diagrams.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

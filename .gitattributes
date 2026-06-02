@@ -1,0 +1,37 @@
+# Normalize all text to LF in the repo; checkout-as-LF everywhere.
+# Prevents CRLF noise from Windows clones polluting diffs.
+* text=auto eol=lf
+
+# Explicit text — never CRLF in the repo
+*.js   text eol=lf
+*.cjs  text eol=lf
+*.mjs  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.svg  text eol=lf
+*.puml text eol=lf
+
+# Scripts — preserve LF so they stay POSIX-executable
+*.sh   text eol=lf
+*.ps1  text eol=crlf
+
+# Binary — never touch
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.mp3   binary
+*.ogg   binary
+*.wav   binary

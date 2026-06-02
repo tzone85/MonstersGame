@@ -43,10 +43,34 @@ npm run preview    # serves dist/ on :4173
 npm test           # vitest + coverage (≥80% lines on pure modules)
 npm run test:e2e   # Playwright e2e against the preview build
 npm run lint
+npm run diagrams   # renders docs/architecture/*.puml → *.svg (needs plantuml)
 ```
 
 Open `http://localhost:5173` — first click resumes audio (browser
 policy).
+
+### Windows users
+
+Everything above works identically in **PowerShell** and **cmd.exe** on
+Windows 10/11. No POSIX shell required. Two notes:
+
+- **Node ≥ 20.** Install from [nodejs.org](https://nodejs.org/) or via
+  `winget install OpenJS.NodeJS.LTS` / `choco install nodejs-lts`.
+- **PlantUML** (only if you regenerate diagrams): `choco install plantuml`
+  or `scoop install plantuml`. The `npm run diagrams` script auto-detects
+  the binary and prints install hints if it's missing.
+
+The repo enforces LF line endings via `.gitattributes`, so Windows clones
+won't muddle the diff with CRLF noise. If your local clone already has
+CRLF files, run:
+
+```powershell
+git add --renormalize .
+git commit -m "chore: normalize line endings"
+```
+
+CI runs **lint**, **unit tests**, and **build** on both `ubuntu-latest`
+and `windows-latest` so platform regressions surface immediately.
 
 ### Useful URL params
 
