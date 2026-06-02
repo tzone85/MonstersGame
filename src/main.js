@@ -1,52 +1,46 @@
+import Phaser from "phaser";
 import "./main.css";
-import { Game } from "./game/game.js";
 
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`failed to load ${src}`));
-    img.src = src;
-  });
-}
+import { RESOLUTION, PALETTE } from "./config/game.js";
+import BootScene     from "./scenes/BootScene.js";
+import TitleScene    from "./scenes/TitleScene.js";
+import TutorialScene from "./scenes/TutorialScene.js";
+import GameScene     from "./scenes/GameScene.js";
+import HUDScene      from "./scenes/HUDScene.js";
+import LevelUpScene  from "./scenes/LevelUpScene.js";
+import PauseScene    from "./scenes/PauseScene.js";
+import GameOverScene from "./scenes/GameOverScene.js";
+import ShopScene     from "./scenes/ShopScene.js";
+import SettingsScene from "./scenes/SettingsScene.js";
 
-async function start() {
-  const canvas = document.getElementById("canvas1");
-  if (!canvas) throw new Error("canvas1 element not found");
-  canvas.width = 1280;
-  canvas.height = 720;
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "white";
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "white";
+const config = {
+  type: Phaser.AUTO,
+  parent: "game-root",
+  backgroundColor: `#${PALETTE.navyDeep.toString(16).padStart(6, "0")}`,
+  width: RESOLUTION.width,
+  height: RESOLUTION.height,
+  pixelArt: false,
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  physics: {
+    default: "arcade",
+    arcade: { debug: false, gravity: { x: 0, y: 0 } },
+  },
+  scene: [
+    BootScene,
+    TitleScene,
+    TutorialScene,
+    GameScene,
+    HUDScene,
+    LevelUpScene,
+    PauseScene,
+    GameOverScene,
+    ShopScene,
+    SettingsScene,
+  ],
+};
 
-  const [playerImage, obstacleImage] = await Promise.all([
-    loadImage("./bull.png").catch(() => null),
-    loadImage("./obstacles.png").catch(() => null),
-  ]);
-
-  const game = new Game({
-    width: canvas.width,
-    height: canvas.height,
-    images: { player: playerImage, obstacle: obstacleImage },
-  });
-  game.init();
-  if (typeof window !== "undefined") window.__game = game;
-
-  canvas.addEventListener("mousedown", (ev) => game.setMouse({ x: ev.offsetX, y: ev.offsetY, pressed: true }));
-  canvas.addEventListener("mouseup", (ev) => game.setMouse({ x: ev.offsetX, y: ev.offsetY, pressed: false }));
-  canvas.addEventListener("mousemove", (ev) => {
-    if (game.mouse.pressed) game.setMouse({ x: ev.offsetX, y: ev.offsetY });
-  });
-
-  function frame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.render(ctx);
-    requestAnimationFrame(frame);
-  }
-  frame();
-}
-
-start().catch((err) => {
-  console.error("game start failed:", err);
-});
+const game = new Phaser.Game(config);
+if (typeof window !== "undefined") window.__game = game;

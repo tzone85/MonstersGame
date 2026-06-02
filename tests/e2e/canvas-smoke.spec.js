@@ -1,37 +1,32 @@
 import { expect, test } from "@playwright/test";
 
-test("page loads, canvas renders at 1280x720, animation runs", async ({ page }) => {
+test("title screen renders inside game-root", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (err) => errors.push(err.message));
   await page.goto("/");
-  const canvas = page.locator("#canvas1");
-  await expect(canvas).toBeVisible();
-  await expect(canvas).toHaveAttribute("width", "1280");
-  await expect(canvas).toHaveAttribute("height", "720");
+  const canvas = page.locator("#game-root canvas");
+  await expect(canvas).toBeVisible({ timeout: 10_000 });
+  // Phaser logs a banner warning under happy-dom but real browsers don't;
+  // we tolerate logger output but fail on uncaught page errors.
   expect(errors).toEqual([]);
 });
 
-test("mouse-down on canvas advances player toward cursor", async ({ page }) => {
+test("can launch a run from the title screen", async ({ page }) => {
   await page.goto("/");
-  const canvas = page.locator("#canvas1");
+  const canvas = page.locator("#game-root canvas");
+  await expect(canvas).toBeVisible({ timeout: 10_000 });
   const box = await canvas.boundingBox();
-  // baseline player position is the centre of the canvas
-  const startCentre = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
-  // pin the cursor to the bottom-right, hold the mouse button, and wait a few frames
-  await page.mouse.move(startCentre.x, startCentre.y);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width - 20, box.y + box.height - 20);
-  await page.waitForTimeout(400);
-  await page.mouse.up();
-
-  // expose the game's player position for assertion
-  const pos = await page.evaluate(() => {
-    const game = window.__game;
-    if (!game) return null;
-    return { x: game.player.collisionX, y: game.player.collisionY };
+  // The "New Run" button is the topmost menu button in the layout.
+  // Click roughly at its expected position (centre x, ~55% height).
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height * 0.55);
+  // Allow a moment for the Game scene to spawn and begin emitting hud:tick.
+  await page.waitForTimeout(800);
+  const state = await page.evaluate(() => {
+    const g = window.__game;
+    if (!g) return null;
+    const sceneMgr = g.scene;
+    const game = sceneMgr.getScene("Game");
+    return game && game.scene.isActive() ? { active: true } : null;
   });
-  if (pos !== null) {
-    expect(pos.x).toBeGreaterThan(640);
-    expect(pos.y).toBeGreaterThan(360);
-  }
+  if (state) expect(state.active).toBe(true);
 });

@@ -3,10 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MonstersGame</title>
+    <meta name="description" content="MonstersGame — a fast, free, browser survivor-roguelite with a Final-Fantasy flavour. Click to move, auto-attack, level up, survive ten minutes." />
+    <meta name="theme-color" content="#0a1230" />
+    <meta property="og:title" content="MonstersGame — A Survivor's Tale" />
+    <meta property="og:description" content="Click to move. Auto-attack. Level up. Survive ten minutes." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>MonstersGame — A Survivor's Tale</title>
   </head>
   <body>
-    <canvas id="canvas1" aria-label="game canvas"></canvas>
+    <div id="splash">
+      <h1>MONSTERS</h1>
+      <p>Loading the swarm…</p>
+    </div>
+    <div id="game-root" aria-label="game canvas"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      window.addEventListener("load", () => {
+        const obs = new MutationObserver(() => {
+          const c = document.querySelector("#game-root canvas");
+          if (c) {
+            document.getElementById("splash").setAttribute("hidden", "");
+            obs.disconnect();
+          }
+        });
+        obs.observe(document.body, { childList: true, subtree: true });
+      });
+    </script>
   </body>
 </html>

@@ -6,7 +6,7 @@ import {
   resolveCollision,
   velocityToward,
   withinPlayfield,
-} from "../../src/game/collision.js";
+} from "../../src/systems/collision.js";
 
 describe("checkCircleCollision", () => {
   it("detects overlap", () => {
@@ -109,7 +109,13 @@ describe("overlapsAny", () => {
     expect(overlapsAny(cand, placed, 100)).toBe(false);
   });
   it("false when placed is empty", () => {
-    expect(overlapsAny({ collisionX: 0, collisionY: 0, collisionRadius: 30 }, [], 100)).toBe(false);
+    expect(
+      overlapsAny(
+        { collisionX: 0, collisionY: 0, collisionRadius: 30 },
+        [],
+        100,
+      ),
+    ).toBe(false);
   });
 });
 
@@ -119,7 +125,13 @@ describe("withinPlayfield", () => {
   it("true for an obstacle comfortably inside", () => {
     expect(
       withinPlayfield(
-        { collisionX: 600, collisionY: 400, collisionRadius: 55, spriteX: 200, width: 250 },
+        {
+          collisionX: 600,
+          collisionY: 400,
+          collisionRadius: 55,
+          spriteX: 200,
+          width: 250,
+        },
         field,
       ),
     ).toBe(true);
@@ -128,7 +140,13 @@ describe("withinPlayfield", () => {
   it("false when above topMargin", () => {
     expect(
       withinPlayfield(
-        { collisionX: 600, collisionY: 100, collisionRadius: 55, spriteX: 200, width: 250 },
+        {
+          collisionX: 600,
+          collisionY: 100,
+          collisionRadius: 55,
+          spriteX: 200,
+          width: 250,
+        },
         field,
       ),
     ).toBe(false);
@@ -137,7 +155,13 @@ describe("withinPlayfield", () => {
   it("false when off-screen horizontally", () => {
     expect(
       withinPlayfield(
-        { collisionX: 600, collisionY: 400, collisionRadius: 55, spriteX: -10, width: 250 },
+        {
+          collisionX: 600,
+          collisionY: 400,
+          collisionRadius: 55,
+          spriteX: -10,
+          width: 250,
+        },
         field,
       ),
     ).toBe(false);
