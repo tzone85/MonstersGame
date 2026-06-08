@@ -225,8 +225,8 @@ npm run build
 
 The original implementation, the 256-line single-file demo, and the
 `game/` extraction with the click-to-move bull are preserved in the git
-history. The 2026-06-02 production rewrite lives under `docs/superpowers/`
-as `2026-06-02-monsters-game-design.md`.
+history. The 2026-06-02 production rewrite spec lives at
+[`docs/design.md`](docs/design.md).
 
 ## License
 
